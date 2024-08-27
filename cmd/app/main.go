@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	config.SetupLogger()
 	err := config.LoadEnv()
 	if err != nil {
 		fmt.Println(err)

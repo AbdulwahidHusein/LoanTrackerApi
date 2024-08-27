@@ -44,6 +44,7 @@ func (u *Usecase) RequestPasswordResetUsecase(userEmail string) error {
 		return err
 	}
 	accessToken := token
+	config.Logger.AddLog(context.Background(), "RequestPasswordReset", "a user with Email : "+userEmail+" requested for password reset")
 	go func() {
 		err := emailSender.SendPasswordResetEmail(userEmail, accessToken)
 		if err != nil {
@@ -77,7 +78,9 @@ func (u *Usecase) ResetPassword(resetToken string, newPassword string) error {
 		if err != nil {
 			return err
 		}
+		config.Logger.AddLog(context.Background(), "ResetPassword", "a user with Email : "+email+" reset their password")
 		return nil
 	}
+	config.Logger.AddLog(context.Background(), "an error "+err.Error(), " occured while a user with Email : "+email+" tried to reset their password")
 	return err
 }
