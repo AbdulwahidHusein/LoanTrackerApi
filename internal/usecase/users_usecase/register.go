@@ -39,6 +39,6 @@ func (u *Usecase) Register(ctx context.Context, user *entity.User) error {
 		return err
 	}
 	user.ID = primitive.NewObjectID()
-
+	user.Role = "user"
 	return u.userRepo.Create(ctx, user)
 }

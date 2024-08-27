@@ -28,7 +28,7 @@ func (s *SimpleEmailSender) SendVerificationEmail(userEmail string, token string
 	url := "localhost:8080"
 
 	subject := "Verify Your Email"
-	html, err := s.loadHTML("pkg/email/templates/verify_email.html")
+	html, err := s.loadHTML("pkg/email_utils/templates/verify_email.html")
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func (s *SimpleEmailSender) SendPasswordResetEmail(userEmail string, token strin
 	url := "localhost:8080"
 
 	subject := "Reset Your Password"
-	html, err := s.loadHTML("pkg/email/templates/password_reset.html")
+	html, err := s.loadHTML("pkg/email_utils/templates/password_reset.html")
 	html = strings.Replace(html, "{{url}}", "http://"+url, -1)
 	if err != nil {
 		return err
