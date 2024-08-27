@@ -2,17 +2,17 @@ package loans_usecase
 
 import (
 	"LoanTrackerApi/internal/entity"
-	"LoanTrackerApi/internal/repository"
+	"LoanTrackerApi/internal/repository/mongodb/loan_repo"
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type LoansUsecase struct {
-	loanRepo repository.LoanRepository
+	loanRepo loan_repo.MongoLoanRepository
 }
 
-func NewUsecase(loanRepo repository.LoanRepository) *LoansUsecase {
+func NewUsecase(loanRepo loan_repo.MongoLoanRepository) *LoansUsecase {
 	return &LoansUsecase{
 		loanRepo: loanRepo,
 	}

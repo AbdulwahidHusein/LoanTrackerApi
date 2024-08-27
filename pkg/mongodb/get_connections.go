@@ -12,6 +12,7 @@ var Client *mongo.Client
 
 var UserCollection *mongo.Collection
 var TokenCollection *mongo.Collection
+var LoanCollection *mongo.Collection
 
 // ConnectDB connects to the MongoDB database
 func ConnectDB(uri string) (*mongo.Client, error) {
@@ -54,4 +55,5 @@ func DisconnectDB() {
 func InitializeCollections() {
 	UserCollection = GetCollection("users")
 	TokenCollection = GetCollection("tokens")
+	LoanCollection = GetCollection("loans")
 }

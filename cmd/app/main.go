@@ -3,6 +3,7 @@ package main
 import (
 	"LoanTrackerApi/config"
 	"LoanTrackerApi/internal/http/routes/account_routes"
+	"LoanTrackerApi/internal/http/routes/loan_routes"
 	"LoanTrackerApi/pkg/mongodb"
 	"fmt"
 
@@ -26,6 +27,7 @@ func main() {
 	router := gin.Default()
 
 	account_routes.RegisterRoutes(router)
+	loan_routes.RegisterLoanRoutes(router)
 
 	router.Run()
 }

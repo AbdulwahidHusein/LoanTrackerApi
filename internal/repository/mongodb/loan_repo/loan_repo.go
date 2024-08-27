@@ -1,4 +1,4 @@
-package mongodb
+package loan_repo
 
 import (
 	"LoanTrackerApi/internal/entity"
@@ -13,6 +13,12 @@ import (
 
 type MongoLoanRepository struct {
 	loanCollection *mongo.Collection
+}
+
+func NewMongoLoanRepository(loanCollection *mongo.Collection) *MongoLoanRepository {
+	return &MongoLoanRepository{
+		loanCollection: loanCollection,
+	}
 }
 
 func (r *MongoLoanRepository) Create(ctx context.Context, loan *entity.Loan) error {
@@ -89,14 +95,20 @@ func (r *MongoLoanRepository) Delete(ctx context.Context, id string) error {
 	return err
 }
 
-// Get paginated loans
-func (r *MongoLoanRepository) GetLoans(ctx context.Context, page, pageSize int) ([]*entity.Loan, error) {
+// Get paginated, filtered, and sorted loans
+func (r *MongoLoanRepository) GetLoans(ctx context.Context, page, pageSize int, filter entity.LoanFilter) ([]*entity.Loan, error) {
 	skip := (page - 1) * pageSize
 	findOptions := options.Find()
 	findOptions.SetSkip(int64(skip))
 	findOptions.SetLimit(int64(pageSize))
+	findOptions.SetSort(parseSortOptions(filter.OrderBy))
 
-	cursor, err := r.loanCollection.Find(ctx, bson.M{}, findOptions)
+	filterBson := bson.M{}
+	if filter.Status != "" {
+		filterBson["status"] = filter.Status
+	}
+
+	cursor, err := r.loanCollection.Find(ctx, filterBson, findOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -116,4 +128,25 @@ func (r *MongoLoanRepository) GetLoans(ctx context.Context, page, pageSize int) 
 	}
 
 	return loans, nil
+}
+
+// Helper function to parse sort options from a slice of strings
+func parseSortOptions(orderBy []string) bson.D {
+	var sortOptions bson.D
+	for _, order := range orderBy {
+		switch order {
+		case "date_asc":
+			sortOptions = append(sortOptions, bson.E{Key: "date", Value: 1})
+		case "date_desc":
+			sortOptions = append(sortOptions, bson.E{Key: "date", Value: -1})
+		case "amt_asc":
+			sortOptions = append(sortOptions, bson.E{Key: "amount", Value: 1})
+		case "amt_desc":
+			sortOptions = append(sortOptions, bson.E{Key: "amount", Value: -1})
+		default:
+			// Default sorting
+			sortOptions = append(sortOptions, bson.E{Key: "date", Value: 1})
+		}
+	}
+	return sortOptions
 }

@@ -14,8 +14,10 @@ func (u *LoansUsecase) ViewLoan(ctx context.Context, LoanId string, user *entity
 	if loan == nil {
 		return nil, errors.New("loan not found")
 	}
-	if loan.IssuerId != user.ID || user.Role != "admin" {
+	if loan.IssuerId != user.ID && user.Role != "admin" {
 		return nil, errors.New("unauthorized access")
 	}
 	return loan, nil
 }
+
+// func (u *LoansUsecase) ViewAllLoans(ctx context.Context, user *entity.User) ([]entity.Loan, error) {

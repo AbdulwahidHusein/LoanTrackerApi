@@ -6,8 +6,8 @@ import (
 	"errors"
 )
 
-func (u *LoansUsecase) ViewAllLoans(ctx context.Context, page int, pageSize int) ([]*entity.Loan, error) {
-	loans, err := u.loanRepo.GetLoans(ctx, page, pageSize)
+func (u *LoansUsecase) GetLoans(ctx context.Context, page int, pageSize int, filter entity.LoanFilter) ([]*entity.Loan, error) {
+	loans, err := u.loanRepo.GetLoans(ctx, page, pageSize, filter)
 	if err != nil {
 		return nil, err
 	}
@@ -38,4 +38,8 @@ func (u *LoansUsecase) RejectLoan(ctx context.Context, loanId string) (entity.Lo
 	}
 	loan.Status = entity.Rejected
 	return *loan, u.loanRepo.Update(ctx, loan)
+}
+
+func (u *LoansUsecase) DeleteLoan(ctx context.Context, loanId string) error {
+	return u.loanRepo.Delete(ctx, loanId)
 }
