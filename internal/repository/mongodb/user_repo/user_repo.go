@@ -98,6 +98,22 @@ func (userRepo *MongoUserRepository) GetAllUsers(ctx context.Context) ([]*entity
 	return userDTOs, nil
 }
 
+func (userRepo *MongoUserRepository) Delete(ctx context.Context, id string) error {
+	_, err := userRepo.userCollection.DeleteOne(ctx, bson.M{"_id": id})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (userRepo *MongoUserRepository) Verify(ctx context.Context, id string) error {
+	_, err := userRepo.userCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"verified": true}})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // Helper function to map a User entity to a GetUserDTO
 func mapUserToGetUserDTO(user *entity.User) *entity.GetUserDTO {
 	return &entity.GetUserDTO{
