@@ -24,6 +24,9 @@ func (u *Usecase) Register(ctx context.Context, user *entity.User) error {
 	email := user.Email
 	password := user.Password
 
+	u.RequestEmailVerification(entity.LoginUserDTO{
+		Email: email})
+
 	dbUser, err := u.userRepo.FindByEmail(ctx, email)
 	if err != nil {
 		return err
@@ -36,5 +39,6 @@ func (u *Usecase) Register(ctx context.Context, user *entity.User) error {
 		return err
 	}
 	user.ID = primitive.NewObjectID()
+
 	return u.userRepo.Create(ctx, user)
 }
