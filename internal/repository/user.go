@@ -1,11 +1,14 @@
 package repository
 
-import "LoanTrackerApi/internal/entity"
+import (
+	"LoanTrackerApi/internal/entity"
+	"context"
+)
 
 type UserRepository interface {
-	Create(user *entity.User) error
-	FindByEmail(email string) (*entity.User, error)
-	FindByID(id string) (*entity.User, error)
-	Update(user *entity.User) error
-	GetAllUsers() ([]*entity.User, error)
+	Create(context context.Context, user *entity.User) error
+	FindByEmail(context context.Context, email string) (*entity.User, error)
+	FindByID(context context.Context, id string) (*entity.GetUserDTO, error)
+	Update(context context.Context, user *entity.UpdateUserDTO) error
+	GetAllUsers(context context.Context) ([]*entity.GetUserDTO, error)
 }
